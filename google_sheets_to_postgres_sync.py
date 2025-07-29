@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Google Sheets and PostgreSQL connection setup
-SERVICE_ACCOUNT_FILE = 'dashboard-sales-team-26f7b3ff3eb2.json'
+SERVICE_ACCOUNT_FILE = 'Your File.json'
 
 # Load service account info directly from the JSON file
 try:
