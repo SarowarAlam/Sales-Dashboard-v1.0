@@ -25,12 +25,12 @@ except json.JSONDecodeError as e:
 
 PG_DBNAME = os.getenv("PG_DBNAME", "sales_dashboard_db")
 PG_USER = os.getenv("PG_USER", "postgres")
-PG_PASSWORD = os.getenv("PG_PASSWORD", "Next2025")
+PG_PASSWORD = os.getenv("PG_PASSWORD", "Your Password")
 PG_HOST = os.getenv("PG_HOST", "localhost")
 PG_PORT = os.getenv("PG_PORT", "5432")
 
-GOOGLE_SHEET_NAME = "Q3 - Sales Mastersheet"
-WORKSHEET_NAME = "All Data"
+GOOGLE_SHEET_NAME = "Your Sheet"
+WORKSHEET_NAME = "Your Worksheet"
 
 # Define expected DB columns
 expected_db_columns = [
