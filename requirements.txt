@@ -1,0 +1,10 @@
+streamlit
+pandas
+numpy
+plotly
+seaborn
+psycopg2-binary # For PostgreSQL
+# If you still need gspread for the migration script (separate from the app)
+gspread
+google-auth-oauthlib
+google-api-python-client
