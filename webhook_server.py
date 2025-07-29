@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # IMPORTANT: Set this to a strong, secret key for basic security
 # Google Apps Script will send this key in the header
-WEBHOOK_SECRET_KEY = os.getenv("WEBHOOK_SECRET_KEY", "your_super_secret_key_change_me!")
+WEBHOOK_SECRET_KEY = os.getenv("WEBHOOK_SECRET_KEY", "a_secret_key")
 
 @app.route('/sync-sheets', methods=['POST'])
 def sync_sheets():
