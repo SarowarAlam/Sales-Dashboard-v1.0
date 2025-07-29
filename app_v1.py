@@ -29,7 +29,7 @@ except KeyError:
     st.error("PostgreSQL credentials not found in Streamlit secrets. Please configure them in .streamlit/secrets.toml.")
     DB_NAME = "sales_dashboard_db"
     DB_USER = "postgres"
-    DB_PASSWORD = "Next2025"  # Replace with your actual PostgreSQL password if not using secrets
+    DB_PASSWORD = "Your Password"  # Replace with your actual PostgreSQL password if not using secrets
     DB_HOST = "localhost"
     DB_PORT = "5432"
 
