@@ -111,9 +111,11 @@ You will need to run three components in separate terminal windows.
 #### Project Structure
 
 sales-call-dashboard/
+
 ├── .env                          # Environment variables for Python scripts
 
 ├── .streamlit/
+
 │   └── secrets.toml              # Secure credentials for Streamlit
 
 ├── app_v1.py                     # Streamlit dashboard application
