@@ -6,7 +6,6 @@ This project is a comprehensive solution for sales teams to track call data in a
 
 [![Project Status: Active](https://img.shields.io/badge/Status-Active-brightgreen.svg)](https://github.com/your-username/your-repo)
 [![Python Version](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 #### Introduction
 
