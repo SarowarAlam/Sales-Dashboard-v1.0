@@ -112,10 +112,16 @@ You will need to run three components in separate terminal windows.
 
 sales-call-dashboard/
 ├── .env                          # Environment variables for Python scripts
+
 ├── .streamlit/
 │   └── secrets.toml              # Secure credentials for Streamlit
+
 ├── app_v1.py                     # Streamlit dashboard application
+
 ├── dashboard-sales-team-26f7b3ff3eb2.json # Google service account key
+
 ├── google_sheets_to_postgres_sync.py  # Data sync pipeline script
+
 ├── requirements.txt              # Project dependencies
+
 └── webhook_server.py             # Flask webhook listener
