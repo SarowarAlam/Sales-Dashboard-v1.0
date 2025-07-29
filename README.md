@@ -127,3 +127,7 @@ sales-call-dashboard/
 ├── requirements.txt              # Project dependencies
 
 └── webhook_server.py             # Flask webhook listener
+
+
+<img width="1916" height="3118" alt="image" src="https://github.com/user-attachments/assets/d9c89ec4-fdc3-4f73-8ca0-ac85b6f03ab1" />
+
