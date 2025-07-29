@@ -38,7 +38,7 @@ Follow these steps to set up and run the project locally.
 
 * **Python 3.9+**
 * **PostgreSQL:** A running PostgreSQL database server.
-* **Google Cloud Service Account:** A `dashboard-sales-team-26f7b3ff3eb2.json` service account file with editor access to your Google Sheet.
+* **Google Cloud Service Account:** A `dashboard-sales-team.json` service account file with editor access to your Google Sheet.
 * **ngrok:** For creating a public URL to your local server.
 
 ##### Installation
@@ -58,7 +58,7 @@ Follow these steps to set up and run the project locally.
 
 ##### Configuration
 
-1.  **Google Sheet Credentials:** Place your `dashboard-sales-team-26f7b3ff3eb2.json` file in the root directory of the project.
+1.  **Google Sheet Credentials:** Place your `dashboard-sales-team.json` file in the root directory of the project.
 2.  **Environment Variables:** Create a `.env` file in the project root to store sensitive information.
     ```ini
     PG_DBNAME="sales_dashboard_db"
