@@ -2,65 +2,94 @@ const WEBHOOK_URL = "https://URL.ngrok-free.app/sync-sheets"; // Replace with yo
 const SECRET_KEY = "a_secret_key"; // Must match WEBHOOK_SECRET_KEY in your Python server
 
 /**
- * This function will be linked to an 'On edit' trigger to catch cell edits.
- * @param {GoogleAppsScript.Events.SheetsOnEdit} e The event object.
+ * SIMPLE trigger — runs automatically on user edits.
+ * Do NOT click Run on this; test by editing the sheet.
+ * If you also add an installable “On edit” trigger, you’ll get the same event here.
+ * @param {GoogleAppsScript.Events.SheetsOnEdit} e
  */
 function onEdit(e) {
-  // Your existing onEdit logic for cell changes
-  const sheetName = e.range.getSheet().getName();
-  if (sheetName === "All Data") {
-    console.log(`Edit detected in sheet: ${sheetName}, cell: ${e.range.getA1Notation()}`);
-    sendWebhookTrigger(); // Call a helper function
-  }
+  if (!e || !e.range) return; // Prevent "reading 'range'" when invoked without event
+  const sheet = e.range.getSheet();
+  if (sheet.getName() !== "All Data") return;
+
+  console.log(`Edit in ${sheet.getName()} @ ${e.range.getA1Notation()}`);
+  sendWebhookTrigger({
+    cause: "edit",
+    a1: e.range.getA1Notation(),
+    sheet: sheet.getName(),
+  });
 }
 
 /**
- * This function will be linked to an 'On change' installable trigger.
- * It detects structural changes like row deletions/insertions.
- * @param {GoogleAppsScript.Events.SheetsOnChange} e The event object.
+ * INSTALLABLE trigger — add via Triggers as “From spreadsheet” → “On change”.
+ * Fires on structural changes; no e.range is provided.
+ * @param {GoogleAppsScript.Events.SheetsOnChange} e
  */
 function onChange(e) {
-  // Check if the change happened in your target sheet
-  const activeSheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  if (activeSheet.getName() === "All Data") {
-    // Ensure it's a structural change like a row/column deletion or insertion
-    if (e.changeType === 'REMOVE_ROW' || e.changeType === 'REMOVE_COLUMN' ||
-        e.changeType === 'INSERT_ROW' || e.changeType === 'INSERT_COLUMN') {
-      console.log(`Structural change detected: ${e.changeType} in sheet: ${activeSheet.getName()}`);
-      sendWebhookTrigger(); // Call the helper function
-    }
-  }
+  if (!e) return;
+  const change = e.changeType;
+  if (!change) return;
+
+  // e.source is the spreadsheet; use active sheet as a reasonable proxy
+  const activeSheet = e.source && e.source.getActiveSheet
+    ? e.source.getActiveSheet()
+    : null;
+
+  if (!activeSheet || activeSheet.getName() !== "All Data") return;
+
+  const structural =
+    change === 'REMOVE_ROW'   || change === 'REMOVE_COLUMN' ||
+    change === 'INSERT_ROW'   || change === 'INSERT_COLUMN' ||
+    change === 'OTHER'; // keep if you want to treat other structural changes
+
+  if (!structural) return;
+
+  console.log(`Change=${change} on sheet ${activeSheet.getName()}`);
+  sendWebhookTrigger({
+    cause: "change",
+    changeType: change,
+    sheet: activeSheet.getName(),
+  });
 }
 
-
 /**
- * Helper function to send the webhook request.
+ * Shared webhook helper — safe to call from either trigger.
+ * Accepts a small payload to avoid depending on e.range.
  */
-function sendWebhookTrigger() {
+function sendWebhookTrigger(extra) {
+  const payload = Object.assign(
+    { message: "Data sync requested due to sheet change." },
+    extra || {}
+  );
+
   const options = {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      'X-Secret-Key': SECRET_KEY
+      'X-Secret-Key': SECRET_KEY,
     },
-    payload: JSON.stringify({
-      // Removed e.range/e.value as onChange doesn't always have them
-      message: "Data sync requested due to sheet change."
-    }),
-    muteHttpExceptions: true
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true,
   };
 
   try {
-    const response = UrlFetchApp.fetch(WEBHOOK_URL, options);
-    const responseCode = response.getResponseCode();
-    const responseBody = response.getContentText();
+    const res = UrlFetchApp.fetch(WEBHOOK_URL, options);
+    const code = res.getResponseCode();
+    const body = res.getContentText();
 
-    if (responseCode === 200) {
-      console.log(`Sync trigger sent successfully. Server response: ${responseBody}`);
+    if (code >= 200 && code < 300) {
+      console.log(`Sync trigger OK (${code}): ${body}`);
     } else {
-      console.error(`Error sending sync trigger. Status: ${responseCode}, Response: ${responseBody}`);
+      console.error(`Sync trigger FAILED (${code}): ${body}`);
     }
-  } catch (error) {
-    console.error(`Network error or problem connecting to webhook: ${error.message}`);
+  } catch (err) {
+    console.error(`Webhook fetch error: ${err && err.message ? err.message : err}`);
   }
+}
+
+/** Optional: safer storage for secrets */
+function setSecrets() {
+  const props = PropertiesService.getScriptProperties();
+  props.setProperty('WEBHOOK_URL', WEBHOOK_URL);
+  props.setProperty('SECRET_KEY', SECRET_KEY);
 }
